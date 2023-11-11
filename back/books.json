@@ -1,0 +1,39 @@
+{
+    "books": [
+        {
+            "id": 1001,
+            "title": "xyz",
+            "category": "fiction",
+            "author": "rittij",
+            "published_year": "2002"
+        },
+        {
+            "id": 1002,
+            "title": "aabc",
+            "category": "fantasy",
+            "author": "rittij",
+            "published_year": "2023"
+        },
+        {
+            "id": 1003,
+            "title": "aannx",
+            "category": "classic",
+            "author": "rittij",
+            "published_year": "2005"
+        },
+        {
+            "id": 1004,
+            "title": "kajsh",
+            "category": "drama",
+            "author": "rittij",
+            "published_year": "2004"
+        },
+        {
+            "id": 1005,
+            "title": "poiu",
+            "category": "fiction",
+            "author": "rittij",
+            "published_year": "2006"
+        }
+    ]
+}
