@@ -27,6 +27,7 @@ import OrderPageLayout from './Dashboard/Components/Pages/Order/Index';
 import OrderDetailPage from './Dashboard/Components/Pages/Order/OrderIndex';
 import OrderProducts from './Dashboard/Components/Pages/Order/OrderProducts';
 import UserPage from './Dashboard/Components/Pages/Users/UserDetail';
+import Slider from './Dashboard/Components/Pages/Slider';
 import PageNotFound from './Dashboard/Components/Pages/PageNotFound';
 
 
@@ -50,6 +51,7 @@ function App() {
                   <Route path='cart' element={<CartPage />}></Route>
                   <Route path='checkout' element={<CheckOut />}></Route>
                   <Route path='order-success' element={<ThankYouPage />}></Route>
+                  <Route path='slider' element={<Slider/>}></Route>
                 </Route>
 
                 <Route element={<AuthGuard />}>
