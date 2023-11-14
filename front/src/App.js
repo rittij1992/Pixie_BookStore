@@ -27,6 +27,7 @@ import OrderPageLayout from './Dashboard/Components/Pages/Order/Index';
 import OrderDetailPage from './Dashboard/Components/Pages/Order/OrderIndex';
 import OrderProducts from './Dashboard/Components/Pages/Order/OrderProducts';
 import UserPage from './Dashboard/Components/Pages/Users/UserDetail';
+import PageNotFound from './Dashboard/Components/Pages/PageNotFound';
 
 
 function App() {
@@ -72,6 +73,8 @@ function App() {
                     </Route>
 
                   </Route>
+
+                  <Route path='*' element={<PageNotFound/>}></Route>
                 </Route>
               </Routes>
             </BrowserRouter>
