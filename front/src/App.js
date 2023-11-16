@@ -29,6 +29,7 @@ import OrderProducts from './Dashboard/Components/Pages/Order/OrderProducts';
 import UserPage from './Dashboard/Components/Pages/Users/UserDetail';
 import Slider from './Dashboard/Components/Pages/Slider';
 import PageNotFound from './Dashboard/Components/Pages/PageNotFound';
+import Payment from './Dashboard/Components/Pages/Payment';
 
 
 function App() {
@@ -52,6 +53,7 @@ function App() {
                   <Route path='checkout' element={<CheckOut />}></Route>
                   <Route path='order-success' element={<ThankYouPage />}></Route>
                   <Route path='slider' element={<Slider/>}></Route>
+                  <Route path='demo-payment' element={<Payment/>}></Route>
                 </Route>
 
                 <Route element={<AuthGuard />}>

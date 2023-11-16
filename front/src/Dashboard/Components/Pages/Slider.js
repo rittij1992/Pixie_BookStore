@@ -1,5 +1,6 @@
-import OwlCarousel from 'react-owl-carousel2';
-// import 'react-owl-carousel2/lib/'; //Allows for server-side rendering.
+import OwlCarousel from "react-owl-carousel2";
+import "react-owl-carousel2/src/owl.carousel.css"; //Allows for server-side rendering.
+import "react-owl-carousel2/src/owl.theme.default.css"; //Allows for server-side rendering.
 
 const Slider = () => {
     const options = {
