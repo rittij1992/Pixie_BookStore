@@ -40,7 +40,7 @@ const Card = ({ product, gridColumb }) => {
                         <button className="mx-2 btn btn-primary">View Book</button>
                     </div>
                     <label>Quantity:&nbsp;</label>
-                    <input className="mx-2" style={{ width: 130}} value={qty} onChange={(e) => changeQty(e)} type="number" ></input>
+                    <input className="mx-2" style={{ width: 130 }} value={qty} onChange={(e) => changeQty(e)} type="number" ></input>
                 </div>
             </div>
         </>

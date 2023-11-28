@@ -184,7 +184,7 @@
 	 * @public
 	 */
 	Owl.Defaults = {
-		items: 3,
+		items: 4,
 		loop: false,
 		center: false,
 		rewind: false,
@@ -202,7 +202,7 @@
 		mergeFit: true,
 		autoWidth: false,
 
-		startPosition: 0,
+		startPosition: 1,
 		rtl: false,
 
 		smartSpeed: 250,
