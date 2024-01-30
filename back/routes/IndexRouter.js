@@ -8,6 +8,7 @@ const bookRouter = require('./BookRouter');
 const orderRouter = require('./OrderRouter');
 const SubscriptionRouter = require('./SubscriberRoute');
 const StripePaymentRouter = require('./StripePayment');
+const RazorPayPayment = require('./RazorPayRoute');
 
 router.use('/users', userRouter);
 router.use('/roles', roleRouter);
@@ -16,6 +17,7 @@ router.use('/books', bookRouter);
 router.use('/orders', orderRouter);
 router.use('/contactAndSubscribe', SubscriptionRouter);
 router.use('/payment', StripePaymentRouter);
+router.use('/razor-payment', RazorPayPayment);
 
 
 module.exports = router;

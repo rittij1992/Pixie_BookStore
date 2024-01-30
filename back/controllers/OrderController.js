@@ -57,7 +57,7 @@ exports.newOrder = async (req, res) => {
         const { billingData, shippingData, cartData } = req.body;
 
         const existingUser = await GuestUser.findOne({ user_emailId: billingData.billingEmailId });
-        console.log(existingUser, "user");
+        // console.log(existingUser, "user");
 
         if (!existingUser) {
             const newGuestUser = new GuestUser({
@@ -300,5 +300,24 @@ exports.newOrder = async (req, res) => {
         res.status(400).json({
             message: error.message
         });
+    }
+}
+
+exports.updatePaymentStatus = async (req, res)=> {
+    const {order_id} = req.body;
+    try {
+        updateOrder = await Order.findByIdAndUpdate({_id: order_id},
+            {
+                order_status : "success"
+            });
+        res.status(201).json({
+            message: "Payment status updated...",
+            paymentStatus : order_id,
+            updateOrder
+        });
+    } catch (error) {
+        res.status(400).json({
+            message: error.message
+        })
     }
 }
