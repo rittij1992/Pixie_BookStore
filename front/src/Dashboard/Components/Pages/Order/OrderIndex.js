@@ -6,7 +6,7 @@ const OrderDetailPage = () => {
   const [orderDetiails, setOrderDetails] = useState([]);
   const [guestUser, setGuestUser] = useState([]);
 
-  const getOrders = async (req, res) => {
+  const getOrders = async () => {
     const response = await axios.get(`${process.env.REACT_APP_API_URL}/orders`);
     const data = response.data;
     console.log(data);

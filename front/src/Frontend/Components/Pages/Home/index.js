@@ -24,7 +24,7 @@ const HomePage = () => {
     };
 
     const events = {
-        
+
     };
 
     useEffect(() => {
@@ -67,24 +67,20 @@ const HomePage = () => {
                         <div className="col-md-12">
                             <div className="section-heading">
                                 <div className="line-dec"></div>
-                                <h1>Featured Items</h1>
+                                <h1>Our Books</h1>
                             </div>
                         </div>
-
                         <div className="d-flex">
                             <OwlCarousel options={options} >
-                                {/* <div className="owl-carousel owl-theme"> */}
                                 {
                                     books.map((book, index) => (
-                                        <div key={index}>
+                                        <div key={index} className="pr-3">
                                             <Card product={book} gridColumb={10} />
                                         </div>
                                     ))
                                 }
-                                {/* </div> */}
                             </OwlCarousel>
                         </div>
-
                     </div>
                 </div>
             </div>

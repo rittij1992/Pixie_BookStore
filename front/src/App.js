@@ -29,6 +29,7 @@ import OrderProducts from './Dashboard/Components/Pages/Order/OrderProducts';
 import UserPage from './Dashboard/Components/Pages/Users/UserDetail';
 import Slider from './Dashboard/Components/Pages/Slider';
 import PageNotFound from './Dashboard/Components/Pages/PageNotFound';
+import FormPay from './Frontend/Components/Pages/test/FormPay';
 // import Payment from './Dashboard/Components/Pages/Payment';
 
 
@@ -52,8 +53,9 @@ function App() {
                   <Route path='cart' element={<CartPage />}></Route>
                   <Route path='checkout' element={<CheckOut />}></Route>
                   <Route path='order-success' element={<ThankYouPage />}></Route>
-                  <Route path='slider' element={<Slider/>}></Route>
+                  <Route path='slider' element={<Slider />}></Route>
                   {/* <Route path='demo-payment' element={<Payment/>}></Route> */}
+                  <Route path='test-payment' element={<FormPay/>}></Route>
                 </Route>
 
                 <Route element={<AuthGuard />}>
@@ -63,7 +65,7 @@ function App() {
                     <Route path='books/edit/:id' element={<EditBook />}></Route>
                     <Route path='books/addbook' element={<AddBook />}></Route>
 
-                    <Route path='userprofile' element={<UserPage/>}></Route>
+                    <Route path='userprofile' element={<UserPage />}></Route>
 
                     <Route path='categories' element={<Allcategories />}></Route>
                     <Route path='categories/addcategory' element={<AddCategory />}></Route>
@@ -75,11 +77,10 @@ function App() {
                       <Route index element={<OrderDetailPage />}></Route>
                       <Route path=':id' element={<OrderProducts />}></Route>
                     </Route>
-
                   </Route>
-
-                  <Route path='*' element={<PageNotFound/>}></Route>
                 </Route>
+                
+                <Route path='*' element={<PageNotFound />}></Route>
               </Routes>
             </BrowserRouter>
           </AddToCartProvider>

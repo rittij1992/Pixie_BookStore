@@ -2,6 +2,10 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import useRazorpay from "react-razorpay";
+// import { Elements } from '@stripe/react-stripe-js';
+// import { loadStripe } from '@stripe/stripe-js';
+// import CheckoutForm from "../../../../Dashboard/Components/Pages/PaymentForm";
 
 // const ShippingField = ({ shippingDetail }) => {
 
@@ -60,13 +64,15 @@ import { useNavigate } from "react-router-dom";
 
 const CheckOut = () => {
 
+    const [Razorpay] = useRazorpay();
     const navigate = useNavigate()
     const [shippingToggle, setShippingToggle] = useState(false);
     const cartList = useSelector((state) => state.cart);
     const [billingDetails, setBillingDetails] = useState({});
     const [shippingDetails, setShippingDetails] = useState({});
     const cartTotal = useSelector((state) => state.cart.reduce((acc, cur) => acc + parseInt(cur.qty * cur.price), 0));
-    const [cartTax, setCartTax] = useState(0);
+
+    const [cartTax, setCartTax] = useState(null);
     const [cartSubTotal, setCartSubTotal] = useState(0);
     const [delivCharge, setDelivCharge] = useState(20);
     const [loader, setLoader] = useState(false);
@@ -79,6 +85,55 @@ const CheckOut = () => {
     const changedShippingValue = (e) => {
         setShippingDetails({ ...shippingDetails, [e.target.name]: e.target.value });
     }
+
+    // Verify RazorPay payment
+    const initPayment = (data, order_id) => {
+        const options = {
+            key: "rzp_test_GJ0bndQHuqv7QU",
+            amount: data.amount,
+            currency: data.currency,
+            name: cartList.name,
+            description: "Test Transaction",
+            image: cartList.coverImage,
+            order_id: data.id,
+            handler: async (response) => {
+                try {
+                    const verifyUrl = "http://localhost:4000/razor-payment/verify";
+                    const { data } = await axios.post(verifyUrl, {...response, order_id});
+                    console.log(data);
+                } catch (error) {
+                    console.log(error);
+                }
+            },
+            theme: {
+                color: "#3399cc",
+            },
+        };
+        const rzp1 = new Razorpay(options);
+
+        rzp1.on("payment.failed", function (response) {
+            alert(response.error.code);
+            alert(response.error.description);
+            alert(response.error.source);
+            alert(response.error.step);
+            alert(response.error.reason);
+            alert(response.error.metadata.order_id);
+            alert(response.error.metadata.payment_id);
+        });
+        rzp1.on("payment.success", function (response) {
+            window.alert("success");
+        })
+        rzp1.open();
+        // updatePaymentStatus(order_id);
+        navigate('/order-success');
+    };
+
+    // const updatePaymentStatus = async (order_id)=>{
+    //     const data = await axios.post(`http://localhost:4000/orders/paymentStatusUpdate`, {order_id});
+    //     console.log(data, "payment status");
+
+    // }
+
     const submitForm = async (e) => {
         e.preventDefault();
         setLoader(true);
@@ -86,18 +141,49 @@ const CheckOut = () => {
         console.log(orderData);
         const response = await axios.post("http://localhost:4000/orders/neworder", orderData);
         const data = response.data;
-        // console.log(data);
-        if(data){
+        const order_id = data.newOrderData._id;
+        console.log(order_id, "xxx");
+        if (data) {
             setLoader(false);
-            navigate("/order-success");
-        }
+            // Initiate RazorPay Payment
+            try {
+                const orderUrl = "http://localhost:4000/razor-payment/orders";
+                const { data } = await axios.post(orderUrl, { amount: cartSubTotal });
+                console.log(data);
+                initPayment(data.data, order_id);
+            } catch (error) {
+                console.log(error);
+            }
+        };
     }
 
-    const calculateSubtotal = () => {
+    // Make sure to call `loadStripe` outsideu of a component’s render to avoid
+    // recreating the `Stripe` object on every render.
+    // const stripePromise = loadStripe('pk_test_51OCKcnSDU5t4Ug5wTU8Q149707OMgFbwBqPD0368AIYdzqVTm6d6zbL7zWUhw6wWloxnoKnHtuU2MXrLM66PsmEo00jB9Qj3dO');
 
+    // async function initialize() {
+
+
+
+    //     const response = await fetch("http://localhost:4000/payment/create", {
+    //         method: "POST",
+    //         headers: { "Content-Type": "application/json" },
+    //         body: JSON.stringify({ product: cartList }),
+    //     })
+    //         .then((res) => res.json())
+    //         .then((data) => {
+    //             setClientSecret(data.id);
+    //             console.log(data, "response");
+    //         });
+    // }
+
+    useEffect(() => {
+        // calculateSubtotal();
+        console.log(cartList, "items");
         const tax = 8 / 100;
         const taxAmount = cartTotal * tax;
         setCartTax(taxAmount);
+        console.log(cartTax, "total price");
 
         if (cartTotal >= 500 || cartTotal == 0) {
             setDelivCharge(0);
@@ -109,11 +195,18 @@ const CheckOut = () => {
             let subTotal = cartTotal + taxAmount + delivCharge;
             setCartSubTotal(subTotal);
         }
+        // Create PaymentIntent as soon as the page loads
+        // initialize();
 
-    }
-    useEffect(() => {
-        calculateSubtotal();
-    }, [cartTotal])
+    }, [cartSubTotal]);
+
+    // const appearance = {
+    //     theme: 'stripe',
+    // };
+    // const options = {
+    //     clientSecret,
+    //     appearance
+    // };
 
 
     return (
@@ -185,46 +278,6 @@ const CheckOut = () => {
                                                         <label className="small text-muted mb-1">Phone No.</label>
                                                         <input name="billingPhoneNo" onChange={changedValue} type="text" className="form-control form-control-sm"
                                                             id="NAME" aria-describedby="helpId" />
-                                                    </div>
-                                                </div>
-
-                                                <div className="row mt-4">
-                                                    <div className="col">
-                                                        <p className="text-muted mb-2">PAYMENT DETAILS</p>
-                                                        <hr className="mt-0" />
-                                                    </div>
-                                                </div>
-                                                <div className="form-group">
-                                                    <label className="small text-muted mb-1">NAME ON CARD</label>
-                                                    <input type="text" className="form-control form-control-sm" name="NAME" id="NAME"
-                                                        aria-describedby="helpId" placeholder="Name Surname" />
-                                                </div>
-                                                <div className="form-group">
-                                                    <label className="small text-muted mb-1">CARD NUMBER</label>
-                                                    <input type="text" className="form-control form-control-sm" name="NAME" id="NAME"
-                                                        aria-describedby="helpId" placeholder="4534 5555 5555 5555" />
-                                                </div>
-                                                <div className="row no-gutters">
-                                                    <div className="col-sm-6 pr-sm-2">
-                                                        <div className="form-group">
-                                                            <label className="small text-muted mb-1">VALID
-                                                                THROUGH</label>
-                                                            <input type="text" className="form-control form-control-sm" name="NAME"
-                                                                id="NAME" aria-describedby="helpId" placeholder="06/21" />
-                                                        </div>
-                                                    </div>
-                                                    <div className="col-sm-6">
-                                                        <div className="form-group">
-                                                            <label className="small text-muted mb-1">CVC CODE</label>
-                                                            <input type="text" className="form-control form-control-sm" name="NAME"
-                                                                id="NAME" aria-describedby="helpId" placeholder="183" />
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div className="row mb-md-5">
-                                                    <div className="col">
-                                                        <button type="submit" className="btn btn-lg btn-block btn-primary ">PURCHASE
-                                                            $37 SEK</button>
                                                     </div>
                                                 </div>
                                             </div>
@@ -362,6 +415,14 @@ const CheckOut = () => {
                                                         </div>
                                                     </div>
                                                     <hr className="my-0" />
+                                                    <div className="mx-2">
+                                                        <div className="row mt-4">
+                                                            <div className="col">
+                                                                <hr className="mt-0" />
+                                                            </div>
+                                                        </div>
+                                                        <button type="submit" className="btn-primary">Proceed to payment</button>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>

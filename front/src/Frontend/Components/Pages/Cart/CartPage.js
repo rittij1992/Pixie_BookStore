@@ -38,6 +38,7 @@ const CartPage = () => {
     useEffect(() => {
         calculateSubtotal();
         console.log(delivCharge);
+        console.log(cartList);
     }, [cartTotal])
 
     const changeQty = (e, product) => {
